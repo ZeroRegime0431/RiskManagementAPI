@@ -27,7 +27,8 @@ public class RiskService
     // GET single risk
     public async Task<RiskDetailDto?> GetRiskByIdAsync(int id)
     {
-        var risk = await _context.Risks.FindAsync(id);
+        var risk = await _context.Risks.Include(r => r.Controls) // Include controls for detail view
+            .FirstOrDefaultAsync(r => r.Id == id);
         if (risk == null) return null;
         
         return MapToDetailDto(risk);
@@ -158,7 +159,8 @@ public class RiskService
             Status = risk.Status.ToString(),
             OwnerId = risk.OwnerId,
             CreatedAt = risk.CreatedAt,
-            Controls = new List<ControlResponseDto>() // Empty for now, Phase 3 will fill this
+            ControlCount = risk.Controls?.Count ?? 0,
+            Controls = new List<ControlResponseDto>() 
         };
     }
 }

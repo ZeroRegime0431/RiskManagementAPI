@@ -70,6 +70,7 @@ public class RiskDetailDto
     public string Status { get; set; } = string.Empty;
     public string OwnerId { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
+    public int ControlCount { get; set; }
     public List<ControlResponseDto> Controls { get; set; } = new();
 }
 
