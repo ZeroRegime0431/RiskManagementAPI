@@ -22,6 +22,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Register Services
 builder.Services.AddScoped<RiskService>();
+builder.Services.AddScoped<ControlService>();
 
 var app = builder.Build();
 

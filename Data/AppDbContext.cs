@@ -9,13 +9,101 @@ public class AppDbContext : DbContext
         : base(options) { }
     
     public DbSet<Risk> Risks { get; set; }
+    public DbSet<Control> Controls { get; set; }  // ← ADD THIS LINE
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
         
-        // Seed 10 risks for testing
-        SeedRisks(modelBuilder);
+        // Configure Control - Risk relationship
+        modelBuilder.Entity<Control>()
+            .HasOne(c => c.Risk)
+            .WithMany(r => r.Controls)
+            .HasForeignKey(c => c.RiskId)
+            .OnDelete(DeleteBehavior.Cascade);  // If Risk deleted, delete its Controls
+        
+        // Seed sample controls (add this after your existing seed data)
+        SeedControls(modelBuilder);
+        
+        SeedRisks(modelBuilder);  // Your existing seed risks
+    }
+    
+    private void SeedControls(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Control>().HasData(
+            new Control
+            {
+                Id = 1,
+                Title = "Quarterly Vendor Security Audit",
+                Description = "Perform comprehensive security audits of all vendors handling sensitive data",
+                Type = ControlType.Preventive,
+                EffectivenessScore = 4,
+                RiskId = 1  // Belongs to "Vendor Data Breach" risk
+            },
+            new Control
+            {
+                Id = 2,
+                Title = "Vendor Contract Termination Clause",
+                Description = "Include right-to-audit and termination for security breach clauses in all vendor contracts",
+                Type = ControlType.Preventive,
+                EffectivenessScore = 3,
+                RiskId = 1
+            },
+            new Control
+            {
+                Id = 3,
+                Title = "Multi-Source Procurement Strategy",
+                Description = "Maintain at least two qualified suppliers for all critical components",
+                Type = ControlType.Corrective,
+                EffectivenessScore = 3,
+                RiskId = 2  // Belongs to "Supply Chain Disruption" risk
+            },
+            new Control
+            {
+                Id = 4,
+                Title = "Real-time Currency Hedging Program",
+                Description = "Automated hedging for foreign currency exposure above $5M",
+                Type = ControlType.Preventive,
+                EffectivenessScore = 4,
+                RiskId = 3  // Belongs to "Currency Exchange" risk
+            },
+            new Control
+            {
+                Id = 5,
+                Title = "Weekly Currency Position Monitoring",
+                Description = "Daily monitoring of currency exposure with alerts for thresholds",
+                Type = ControlType.Detective,
+                EffectivenessScore = 4,
+                RiskId = 3
+            },
+            new Control
+            {
+                Id = 6,
+                Title = "Local Partnership Program",
+                Description = "Establish strategic partnerships with local firms in target markets",
+                Type = ControlType.Preventive,
+                EffectivenessScore = 3,
+                RiskId = 4  // Belongs to "Market Entry" risk
+            },
+            new Control
+            {
+                Id = 7,
+                Title = "24/7 Security Monitoring",
+                Description = "Real-time threat detection and response system",
+                Type = ControlType.Detective,
+                EffectivenessScore = 4,
+                RiskId = 8  // Belongs to "Ransomware" risk
+            },
+            new Control
+            {
+                Id = 8,
+                Title = "Offline Backups",
+                Description = "Daily encrypted backups stored offline for ransomware recovery",
+                Type = ControlType.Corrective,
+                EffectivenessScore = 3,
+                RiskId = 8
+            }
+        );
     }
     
     private void SeedRisks(ModelBuilder modelBuilder)

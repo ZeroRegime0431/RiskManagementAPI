@@ -37,6 +37,8 @@ public class Risk
     public string OwnerId { get; set; } = string.Empty;
     
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    public virtual ICollection<Control> Controls { get; set; } = new List<Control>();
 }
 
 public enum RiskCategory

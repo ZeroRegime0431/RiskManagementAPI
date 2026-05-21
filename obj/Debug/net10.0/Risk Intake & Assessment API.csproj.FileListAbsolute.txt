@@ -305,6 +305,7 @@ C:\Transviti\RiskManagementAPI\obj\Debug\net10.0\Risk Intake & Assessment API.As
 C:\Transviti\RiskManagementAPI\obj\Debug\net10.0\Risk Intake & Assessment API.csproj.CoreCompileInputs.cache
 C:\Transviti\RiskManagementAPI\obj\Debug\net10.0\Risk Intake & Assessment API.MvcApplicationPartsAssemblyInfo.cs
 C:\Transviti\RiskManagementAPI\obj\Debug\net10.0\Risk Intake & Assessment API.MvcApplicationPartsAssemblyInfo.cache
+C:\Transviti\RiskManagementAPI\obj\Debug\net10.0\Risk Intake & Assessment API.sourcelink.json
 C:\Transviti\RiskManagementAPI\obj\Debug\net10.0\rjimswa.dswa.cache.json
 C:\Transviti\RiskManagementAPI\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
 C:\Transviti\RiskManagementAPI\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
