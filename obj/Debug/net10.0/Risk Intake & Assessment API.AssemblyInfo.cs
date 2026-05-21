@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Risk Intake & Assessment API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c246f70affcee9f6cb72e31f84433562546dafd1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7b2ecfc5afb91aaa7df962b443cc1c1d09752168")]
 [assembly: System.Reflection.AssemblyProductAttribute("Risk Intake & Assessment API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Risk Intake & Assessment API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
