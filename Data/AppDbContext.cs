@@ -9,7 +9,8 @@ public class AppDbContext : DbContext
         : base(options) { }
     
     public DbSet<Risk> Risks { get; set; }
-    public DbSet<Control> Controls { get; set; }  // ← ADD THIS LINE
+    public DbSet<Control> Controls { get; set; }
+    public DbSet<QuarterlyAssessment> QuarterlyAssessments { get; set; }  // ← ADD THIS
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -20,12 +21,79 @@ public class AppDbContext : DbContext
             .HasOne(c => c.Risk)
             .WithMany(r => r.Controls)
             .HasForeignKey(c => c.RiskId)
-            .OnDelete(DeleteBehavior.Cascade);  // If Risk deleted, delete its Controls
+            .OnDelete(DeleteBehavior.Cascade);
         
-        // Seed sample controls (add this after your existing seed data)
+        // Configure Assessment - Risk relationship
+        modelBuilder.Entity<QuarterlyAssessment>()
+            .HasOne(a => a.Risk)
+            .WithMany(r => r.QuarterlyAssessments)
+            .HasForeignKey(a => a.RiskId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
+        // Add unique constraint: One assessment per quarter per year per risk
+        modelBuilder.Entity<QuarterlyAssessment>()
+            .HasIndex(a => new { a.RiskId, a.Year, a.Quarter })
+            .IsUnique()
+            .HasDatabaseName("IX_UniqueAssessmentPerQuarter");
+        
+        // Seed sample assessments
+        SeedAssessments(modelBuilder);
+        
+        // Seed data
+        SeedRisks(modelBuilder);
         SeedControls(modelBuilder);
+    }
+    
+    private void SeedAssessments(ModelBuilder modelBuilder)
+    {
+        var fixedDate = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         
-        SeedRisks(modelBuilder);  // Your existing seed risks
+        modelBuilder.Entity<QuarterlyAssessment>().HasData(
+            new QuarterlyAssessment
+            {
+                Id = 1,
+                RiskId = 1,  // Vendor Data Breach
+                Quarter = Quarter.Q1,
+                Year = 2025,
+                ResidualLikelihood = 2,
+                ResidualImpact = 3,
+                Notes = "Vendor has implemented new security controls. Risk reduced but still requires monitoring.",
+                SubmittedAt = fixedDate.AddDays(-45)
+            },
+            new QuarterlyAssessment
+            {
+                Id = 2,
+                RiskId = 1,  // Vendor Data Breach
+                Quarter = Quarter.Q4,
+                Year = 2024,
+                ResidualLikelihood = 3,
+                ResidualImpact = 4,
+                Notes = "Initial assessment - vendor security needs improvement.",
+                SubmittedAt = fixedDate.AddDays(-100)
+            },
+            new QuarterlyAssessment
+            {
+                Id = 3,
+                RiskId = 4,  // Asia-Pacific Market Entry
+                Quarter = Quarter.Q4,
+                Year = 2024,
+                ResidualLikelihood = 2,
+                ResidualImpact = 3,
+                Notes = "Local partnerships established in Japan. Early signs positive.",
+                SubmittedAt = fixedDate.AddDays(-100)
+            },
+            new QuarterlyAssessment
+            {
+                Id = 4,
+                RiskId = 8,  // Ransomware Attack
+                Quarter = Quarter.Q1,
+                Year = 2025,
+                ResidualLikelihood = 2,
+                ResidualImpact = 4,
+                Notes = "New backup systems implemented. Recovery time reduced to 48 hours.",
+                SubmittedAt = fixedDate.AddDays(-30)
+            }
+        );
     }
     
     private void SeedControls(ModelBuilder modelBuilder)

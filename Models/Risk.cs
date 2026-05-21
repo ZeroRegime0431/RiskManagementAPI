@@ -25,7 +25,6 @@ public class Risk
     [Range(1, 5)]
     public int ImpactScore { get; set; }
     
-    // This is calculated, not stored in database
     [NotMapped]
     public int InherentRiskScore => LikelihoodScore * ImpactScore;
     
@@ -37,8 +36,10 @@ public class Risk
     public string OwnerId { get; set; } = string.Empty;
     
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
+    
+    // Navigation properties
     public virtual ICollection<Control> Controls { get; set; } = new List<Control>();
+    public virtual ICollection<QuarterlyAssessment> QuarterlyAssessments { get; set; } = new List<QuarterlyAssessment>();
 }
 
 public enum RiskCategory
