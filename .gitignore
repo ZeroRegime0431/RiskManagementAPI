@@ -1,0 +1,43 @@
+# Build results
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+
+# Visual Studio
+.vs/
+.vscode/
+*.user
+*.suo
+*.sln.docstates
+*.userprefs
+
+# User-specific files
+appsettings.Development.json
+*.local.json
+
+# Rider
+.idea/
+*.sln.iml
+*.sh
+
+# OS files
+.DS_Store
+Thumbs.db
+.env
+.env.local
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# NuGet
+.nuget/
+*.nupkg
+*.snupkg
+packages/
+
+# Test Results
+TestResults/
