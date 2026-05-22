@@ -71,6 +71,18 @@ public class AssessmentService
                 $"Current status: '{risk.Status}'");
         }
         
+        // ✅ ADD VALIDATION HERE - Right after status check
+        // Calculate residual score
+        int residualScore = createDto.ResidualLikelihood * createDto.ResidualImpact;
+
+        // BUSINESS RULE: Residual risk cannot exceed inherent risk
+        if (residualScore > risk.InherentRiskScore)
+        {
+            throw new InvalidOperationException(
+                $"Residual risk score ({residualScore}) cannot exceed inherent risk score ({risk.InherentRiskScore}). " +
+                "Controls should reduce risk, not increase it.");
+        }
+
         // Validate Quarter
         if (!Enum.TryParse<Quarter>(createDto.Quarter, true, out var quarter))
         {
