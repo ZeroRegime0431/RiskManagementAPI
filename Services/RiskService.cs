@@ -163,4 +163,63 @@ public class RiskService
             Controls = new List<ControlResponseDto>() 
         };
     }
+
+
+    // GET: Score summary with trend analysis 
+public async Task<ScoreSummaryDto?> GetScoreSummaryAsync(int id)
+{
+    // Load risk with its controls and assessments
+    var risk = await _context.Risks
+        .Include(r => r.Controls)
+        .Include(r => r.QuarterlyAssessments)
+        .FirstOrDefaultAsync(r => r.Id == id);
+    
+    if (risk == null) return null;
+    
+    // Get assessments ordered by date (most recent first)
+    var assessments = risk.QuarterlyAssessments
+        .OrderByDescending(a => a.Year)
+        .ThenByDescending(a => a.Quarter)
+        .ToList();
+    
+    var latestAssessment = assessments.FirstOrDefault();
+    var previousAssessment = assessments.Skip(1).FirstOrDefault();
+    
+    // Calculate trend
+    string trend = "NotEnoughData";
+    if (assessments.Count >= 2 && previousAssessment != null)
+    {
+        int latestScore = latestAssessment!.ResidualRiskScore;
+        int previousScore = previousAssessment.ResidualRiskScore;
+        
+        if (latestScore < previousScore)
+            trend = "Improving";
+        else if (latestScore > previousScore)
+            trend = "Worsening";
+        else
+            trend = "Stable";
+    }
+    
+    // Calculate risk reduction
+    int? riskReduction = null;
+    int? latestResidualScore = null;
+    
+    if (latestAssessment != null)
+    {
+        latestResidualScore = latestAssessment.ResidualRiskScore;
+        riskReduction = risk.InherentRiskScore - latestResidualScore.Value;
+    }
+    
+    return new ScoreSummaryDto
+    {
+        RiskId = risk.Id,
+        Title = risk.Title,
+        InherentRiskScore = risk.InherentRiskScore,
+        LatestResidualScore = latestResidualScore,
+        RiskReduction = riskReduction,
+        ControlCount = risk.Controls.Count,
+        LastAssessedOn = latestAssessment?.SubmittedAt,
+        Trend = trend
+    };
+}
 }

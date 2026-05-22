@@ -80,3 +80,16 @@ public class UpdateStatusDto
     [Required(ErrorMessage = "Status is required")]
     public string Status { get; set; } = string.Empty;
 }
+
+// Used for score summary endpoint (Phase 5)
+public class ScoreSummaryDto
+{
+    public int RiskId { get; set; }
+    public string Title { get; set; } = string.Empty;
+    public int InherentRiskScore { get; set; }
+    public int? LatestResidualScore { get; set; }
+    public int? RiskReduction { get; set; }
+    public int ControlCount { get; set; }
+    public DateTime? LastAssessedOn { get; set; }
+    public string Trend { get; set; } = string.Empty;
+}

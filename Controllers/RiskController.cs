@@ -150,4 +150,22 @@ public class RiskController : ControllerBase
             });
         }
     }
+
+
+    // GET /risks/{id}/score-summary
+    [HttpGet("{id}/score-summary")]
+    public async Task<IActionResult> GetScoreSummary(int id)
+    {
+        var summary = await _service.GetScoreSummaryAsync(id);
+        if (summary == null)
+        {
+            return NotFound(new ProblemDetails
+            {
+                Title = "Risk not found",
+                Status = 404,
+                Detail = $"Risk with ID {id} was not found"
+            });
+        }
+        return Ok(summary);
+    }
 }
